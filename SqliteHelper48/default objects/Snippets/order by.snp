@@ -1,0 +1,11 @@
+<Data type="Models.Snippets.Snippet" assembly="Models, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" version="1" culture="en-US" hasTypeCache="true">
+  <TypeCache>
+    <TypeInfo typeid="1" type="System.String" assembly="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  </TypeCache>
+  <Name value="Order By" typeid="1" />
+  <Shortcut typeid="1" value="ob" />
+  <Description typeid="1" value="Order by" />
+  <_Script typeid="1" value="ORDER BY&#xD;&#xA;	{cursor}" />
+  <Indented type="System.Boolean" assembly="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" value="True" />
+  <CursorOffset type="System.Int32" assembly="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" value="11" />
+</Data>

@@ -1,0 +1,11 @@
+<Data type="Models.Snippets.Snippet" assembly="Models, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" version="1" culture="en-US" hasTypeCache="true">
+  <TypeCache>
+    <TypeInfo typeid="1" type="System.String" assembly="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  </TypeCache>
+  <Name value="Common Table Expression" typeid="1" />
+  <Shortcut typeid="1" value="cte" />
+  <Description typeid="1" value="Template to create CTEs" />
+  <_Script typeid="1" value="WITH cte AS &#xD;&#xA;(&#xD;&#xA;	SELECT &#xD;&#xA;		*&#xD;&#xA;	FROM &#xD;&#xA;		{ObjectWithFields:Object1}&#xD;&#xA;)&#xD;&#xA;SELECT &#xD;&#xA;	* &#xD;&#xA;FROM &#xD;&#xA;	cte{cursor}" />
+  <Indented type="System.Boolean" assembly="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" value="True" />
+  <CursorOffset type="System.Int32" assembly="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" value="98" />
+</Data>

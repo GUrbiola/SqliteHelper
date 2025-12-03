@@ -1,8 +1,10 @@
 using System;
-using Microsoft.Data.Sqlite;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using Microsoft.Data.Sqlite;
 
-namespace SqliteHelper
+namespace SqliteHelper48
 {
     public class SqliteDatabaseExporter
     {

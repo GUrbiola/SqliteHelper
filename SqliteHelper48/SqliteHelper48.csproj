@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{D868282B-F638-4225-B532-28136CD64C18}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>SqliteHelper48</RootNamespace>
+    <AssemblyName>SqliteHelper48</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+    <RuntimeIdentifiers>win</RuntimeIdentifiers>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CompletionDataProvider.cs" />
+    <Compile Include="Schema\Alias.cs" />
+    <Compile Include="AutocompleteWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CommentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="DatabaseManager.cs" />
+    <Compile Include="DatabaseProject.cs" />
+    <Compile Include="DiagramDesignerForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DiagramDesignerForm.Designer.cs">
+      <DependentUpon>DiagramDesignerForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ManageRelationshipsDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ManageRelationshipsDialog.Designer.cs">
+      <DependentUpon>ManageRelationshipsDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="ProjectNameDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ProjectNameDialog.Designer.cs">
+      <DependentUpon>ProjectNameDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="QueryDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="QueryDialog.Designer.cs">
+      <DependentUpon>QueryDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="RecentDatabases.cs" />
+    <Compile Include="RecentProjects.cs" />
+    <Compile Include="RelationshipDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="RelationshipDialog.Designer.cs">
+      <DependentUpon>RelationshipDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="RowEditorDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Schema\DatabaseObjectType.cs" />
+    <Compile Include="Schema\Field.cs" />
+    <Compile Include="Schema\IDatabaseObject.cs" />
+    <Compile Include="Schema\SqliteFieldType.cs" />
+    <Compile Include="Schema\Table.cs" />
+    <Compile Include="Schema\View.cs" />
+    <Compile Include="Snippet.cs" />
+    <Compile Include="Snippets.Designer.cs" />
+    <Compile Include="SqlGenerator.cs" />
+    <Compile Include="SqliteConnector.cs" />
+    <Compile Include="SqliteDatabaseExporter.cs" />
+    <Compile Include="TableColumnInfo.cs" />
+    <Compile Include="TableControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="TableEditorDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TableEditorDialog.Designer.cs">
+      <DependentUpon>TableEditorDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="CommentControl.resx">
+      <DependentUpon>CommentControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DiagramDesignerForm.resx">
+      <DependentUpon>DiagramDesignerForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ManageRelationshipsDialog.resx">
+      <DependentUpon>ManageRelationshipsDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="QueryDialog.resx">
+      <DependentUpon>QueryDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RelationshipDialog.resx">
+      <DependentUpon>RelationshipDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <EmbeddedResource Include="Snippets.resx" />
+    <EmbeddedResource Include="TableControl.resx">
+      <DependentUpon>TableControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TableEditorDialog.resx">
+      <DependentUpon>TableEditorDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="default objects\Snippets\Author.snp" />
+    <None Include="default objects\Snippets\Begin - end.snp" />
+    <None Include="default objects\Snippets\Changes in DB.snp" />
+    <None Include="default objects\Snippets\Common Table Expression.snp" />
+    <None Include="default objects\Snippets\Create procedure.snp" />
+    <None Include="default objects\Snippets\Cross join.snp" />
+    <None Include="default objects\Snippets\Cursor.snp" />
+    <None Include="default objects\Snippets\declare.snp" />
+    <None Include="default objects\Snippets\Drop Table.snp" />
+    <None Include="default objects\Snippets\Find Changes in DB.snp" />
+    <None Include="default objects\Snippets\IF - ELSE.snp" />
+    <None Include="default objects\Snippets\IF.snp" />
+    <None Include="default objects\Snippets\Inner join.snp" />
+    <None Include="default objects\Snippets\Insert into.snp" />
+    <None Include="default objects\Snippets\Is Unique.snp" />
+    <None Include="default objects\Snippets\Left outer join.snp" />
+    <None Include="default objects\Snippets\order by.snp" />
+    <None Include="default objects\Snippets\Outer apply.snp" />
+    <None Include="default objects\Snippets\Record Count.snp" />
+    <None Include="default objects\Snippets\Recursive.snp" />
+    <None Include="default objects\Snippets\Right outer join.snp" />
+    <None Include="default objects\Snippets\Select all.snp" />
+    <None Include="default objects\Snippets\Select Count%281%29 From.snp" />
+    <None Include="default objects\Snippets\Select some fields from.snp" />
+    <None Include="default objects\Snippets\Select top 100.snp" />
+    <None Include="default objects\Snippets\select.snp" />
+    <None Include="default objects\Snippets\Table Sizes.snp" />
+    <None Include="default objects\Snippets\Transaction.snp" />
+    <None Include="default objects\Snippets\Truncate Table.snp" />
+    <None Include="default objects\Snippets\Where.snp" />
+    <None Include="default objects\Snippets\While.snp" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Data.Sqlite.Core" Version="8.0.0" />
+    <PackageReference Include="Newtonsoft.Json">
+      <Version>13.0.4</Version>
+    </PackageReference>
+    <PackageReference Include="SQLitePCLRaw.bundle_green" Version="2.1.10" />
+    <PackageReference Include="ZidUtilities.CommonCode.Win">
+      <Version>1.0.5</Version>
+    </PackageReference>
+  </ItemGroup>
+  <PropertyGroup>
+    <LangVersion>9.0</LangVersion>
+  </PropertyGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

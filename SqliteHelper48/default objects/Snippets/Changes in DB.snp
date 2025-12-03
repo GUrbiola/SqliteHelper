@@ -1,0 +1,11 @@
+<Data type="Models.Snippets.Snippet" assembly="Models, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" version="1" culture="en-US" hasTypeCache="true">
+  <TypeCache>
+    <TypeInfo typeid="1" type="System.String" assembly="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  </TypeCache>
+  <Name value="Changes in DB" typeid="1" />
+  <Shortcut typeid="1" value="changes" />
+  <Description typeid="1" value="" />
+  <_Script typeid="1" value="SELECT &#xD;&#xA;	Sy.object_id AS Id,&#xD;&#xA;	Sy.name AS Object,&#xD;&#xA;	Sy.type AS 'Type',&#xD;&#xA;	Sy.type_desc AS 'Description',&#xD;&#xA;	Sy.parent_object_id AS 'Parent',&#xD;&#xA;	Sy.create_date AS 'Creation',&#xD;&#xA;	Sy.modify_date AS 'LastUpdate'&#xD;&#xA;FROM &#xD;&#xA;	sys.objects Sy &#xD;&#xA;ORDER BY &#xD;&#xA;	Sy.modify_date DESC&#xD;&#xA;{cursor}" />
+  <Indented type="System.Boolean" assembly="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" value="True" />
+  <CursorOffset type="System.Int32" assembly="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" value="264" />
+</Data>

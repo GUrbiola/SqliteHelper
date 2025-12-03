@@ -1,6 +1,13 @@
+using System;
+using System.Collections.Generic;
 using System.Data;
+using System.Drawing;
+using System.IO;
+using System.Linq;
+using System.Windows.Forms;
+using ZidUtilities.CommonCode.Win;
 
-namespace SqliteHelper
+namespace SqliteHelper48
 {
     public partial class MainForm : Form
     {
@@ -250,13 +257,13 @@ namespace SqliteHelper
         {
             // Create simple icons using text-based representation
             // In a real application, you would load actual icon files
-            treeViewImageList.Images.Add("database", SystemIcons.Application.ToBitmap());
-            treeViewImageList.Images.Add("tables", SystemIcons.Shield.ToBitmap());
-            treeViewImageList.Images.Add("table", SystemIcons.Information.ToBitmap());
-            treeViewImageList.Images.Add("views", SystemIcons.Shield.ToBitmap());
-            treeViewImageList.Images.Add("view", SystemIcons.Question.ToBitmap());
-            treeViewImageList.Images.Add("indexes", SystemIcons.Shield.ToBitmap());
-            treeViewImageList.Images.Add("index", SystemIcons.Warning.ToBitmap());
+            treeViewImageList.Images.Add("database", Properties.Resources.Db32);
+            treeViewImageList.Images.Add("tables", Properties.Resources.TableObj32);
+            treeViewImageList.Images.Add("table", Properties.Resources.Table32);
+            treeViewImageList.Images.Add("views", Properties.Resources.TableObj32);
+            treeViewImageList.Images.Add("view", Properties.Resources.View32);
+            treeViewImageList.Images.Add("indexes", Properties.Resources.Index32);
+            treeViewImageList.Images.Add("index", Properties.Resources.Id32);
         }
 
         private void openDataBaseToolStripMenuItem_Click(object sender, EventArgs e)
@@ -407,7 +414,7 @@ namespace SqliteHelper
 
                 case "view":
                     objectInfoTextBox.Text = databaseManager.GetViewSchema(objectName);
-                    LoadTableData(objectName);
+                    LoadViewData(objectName);
                     currentTableName = objectName;
                     break;
 
@@ -431,6 +438,21 @@ namespace SqliteHelper
             {
                 var dataTable = databaseManager.GetTableData(tableName);
                 dataGridView.DataSource = dataTable;
+                dataGridView.ContextMenuStrip = gridContextMenu;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading table data: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+        
+        private void LoadViewData(string tableName)
+        {
+            try
+            {
+                var dataTable = databaseManager.GetTableData(tableName);
+                dataGridView.DataSource = dataTable;
+                dataGridView.ContextMenuStrip = null;
             }
             catch (Exception ex)
             {
@@ -894,15 +916,15 @@ namespace SqliteHelper
 
         private void createTableToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            using var dialog = new CreateTableDialog();
+            using var dialog = new TableEditorDialog();
             if (dialog.ShowDialog() == DialogResult.OK)
             {
                 try
                 {
-                    if (databaseManager.ExecuteNonQuery(dialog.CreateTableSQL, out string errorMessage))
+                    if (databaseManager.ExecuteNonQuery(dialog.TableSql, out string errorMessage))
                     {
                         LoadDatabaseStructure();
-                        MessageBox.Show($"Table '{dialog.TableName}' created successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MessageBox.Show($"Table created successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                     else
                     {
@@ -1005,5 +1027,61 @@ namespace SqliteHelper
             base.OnFormClosing(e);
             databaseManager?.Dispose();
         }
+
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+            // Load saved theme preference
+            string savedTheme = Properties.Settings.Default.SelectedTheme;
+            ZidThemes selectedTheme = ZidThemes.None;
+            if (Enum.TryParse<ZidThemes>(savedTheme, out selectedTheme))
+                themeManager1.Theme = selectedTheme;
+            else
+                themeManager1.Theme = ZidThemes.None;
+            themeManager1.ApplyTheme();
+            
+            Dictionary<string, ZidThemes> themes = new Dictionary<string, ZidThemes>();
+            foreach (var theme in Enum.GetValues(typeof(ZidThemes)))
+                themes.Add(theme.ToString(), (ZidThemes)theme);
+
+            themes.OrderBy(t => t.Key);
+            foreach (var theme in themes.OrderBy(t => t.Key))
+            {
+                ToolStripMenuItem menuOption= new System.Windows.Forms.ToolStripMenuItem();
+                menuOption.Name = $"ZidTheme_{theme.Key}";
+                menuOption.Text = theme.Key;
+                menuOption.Tag = theme.Value;
+                if (theme.Key == savedTheme)
+                    menuOption.Checked = true;
+
+                menuOption.Click += delegate (object? sender, EventArgs e)
+                {
+                    ToolStripMenuItem menuItem = sender as ToolStripMenuItem;
+                    if (sender != null)
+                    {
+                        ZidThemes theme = (ZidThemes)menuItem.Tag;
+                        if (themeManager1 != null)
+                        {
+                            themeManager1.Theme = theme;
+                            Properties.Settings.Default.SelectedTheme = theme.ToString();
+                            Properties.Settings.Default.Save();
+                            themeManager1.ApplyTheme();
+                        }
+
+                        // Uncheck all other menu items
+                        foreach (ToolStripMenuItem item in themeToolStripMenuItem.DropDownItems)
+                            item.Checked = false;
+
+                        menuItem.Checked = true;
+                    }
+                };
+
+                themeToolStripMenuItem.DropDownItems.Add(menuOption);
+
+            }
+
+
+
+        }
+
     }
 }

@@ -1,4 +1,7 @@
-namespace SqliteHelper
+using System;
+using System.Windows.Forms;
+
+namespace SqliteHelper48
 {
     internal static class Program
     {
@@ -9,9 +12,8 @@ namespace SqliteHelper
         static void Main()
         {
             SQLitePCL.Batteries.Init();
-            // To customize application configuration such as set high DPI settings or default font,
-            // see https://aka.ms/applicationconfiguration.
-            ApplicationConfiguration.Initialize();
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new MainForm());
         }
     }
