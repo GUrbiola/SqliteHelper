@@ -113,10 +113,5 @@ namespace SqliteHelper48
             themeManager1.Theme = Enum.TryParse<ZidThemes>(savedTheme, out var theme) ? theme : ZidThemes.None;
             themeManager1.ApplyTheme();
         }
-
-        private void ManageRelationshipsDialog_Load_1(object sender, EventArgs e)
-        {
-
-        }
     }
 }

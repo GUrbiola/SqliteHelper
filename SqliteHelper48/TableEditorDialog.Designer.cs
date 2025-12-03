@@ -75,6 +75,7 @@ namespace SqliteHelper48
             this.buttonMoveUp.TabIndex = 4;
             this.buttonMoveUp.Text = "Move Up";
             this.buttonMoveUp.UseVisualStyleBackColor = true;
+            this.buttonMoveUp.Click += new System.EventHandler(this.buttonMoveUp_Click);
             // 
             // buttonMoveDown
             // 
@@ -84,6 +85,7 @@ namespace SqliteHelper48
             this.buttonMoveDown.TabIndex = 5;
             this.buttonMoveDown.Text = "Move Down";
             this.buttonMoveDown.UseVisualStyleBackColor = true;
+            this.buttonMoveDown.Click += new System.EventHandler(this.buttonMoveDown_Click);
             // 
             // buttonOK
             // 
@@ -93,6 +95,7 @@ namespace SqliteHelper48
             this.buttonOK.TabIndex = 6;
             this.buttonOK.Text = "OK";
             this.buttonOK.UseVisualStyleBackColor = true;
+            this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
             // 
             // buttonCancel
             // 
@@ -103,9 +106,12 @@ namespace SqliteHelper48
             this.buttonCancel.TabIndex = 7;
             this.buttonCancel.Text = "Cancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
+            this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
             // 
             // themeManager1
             // 
+            this.themeManager1.ExcludedControlTypes.Add("ICSharpCode.TextEditor.TextEditorControl");
+            this.themeManager1.ExcludedControlTypes.Add("ZidUtilities.CommonCode.ICSharpTextEditor.ExtendedEditor");
             this.themeManager1.ParentForm = this;
             // 
             // TableEditorDialog
@@ -129,6 +135,7 @@ namespace SqliteHelper48
             this.Name = "TableEditorDialog";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Table Editor";
+            this.Load += new System.EventHandler(this.TableEditorDialog_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewColumns)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

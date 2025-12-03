@@ -5,6 +5,8 @@ VisualStudioVersion = 17.14.36518.9
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SqliteHelper48", "SqliteHelper48\SqliteHelper48.csproj", "{D868282B-F638-4225-B532-28136CD64C18}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Installer48", "Installer48\Installer48.vdproj", "{BB095E81-0993-24DF-BD8D-673C6EF89A47}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,8 @@ Global
 		{D868282B-F638-4225-B532-28136CD64C18}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D868282B-F638-4225-B532-28136CD64C18}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D868282B-F638-4225-B532-28136CD64C18}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BB095E81-0993-24DF-BD8D-673C6EF89A47}.Debug|Any CPU.ActiveCfg = Debug
+		{BB095E81-0993-24DF-BD8D-673C6EF89A47}.Release|Any CPU.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

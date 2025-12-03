@@ -46,6 +46,7 @@ namespace SqliteHelper48
             this.listBoxRelationships.Name = "listBoxRelationships";
             this.listBoxRelationships.Size = new System.Drawing.Size(481, 277);
             this.listBoxRelationships.TabIndex = 1;
+            this.listBoxRelationships.SelectedIndexChanged += new System.EventHandler(this.listBoxRelationships_SelectedIndexChanged);
             // 
             // buttonAdd
             // 
@@ -55,6 +56,7 @@ namespace SqliteHelper48
             this.buttonAdd.TabIndex = 2;
             this.buttonAdd.Text = "Add";
             this.buttonAdd.UseVisualStyleBackColor = true;
+            this.buttonAdd.Click += new System.EventHandler(this.buttonAdd_Click);
             // 
             // buttonEdit
             // 
@@ -65,6 +67,7 @@ namespace SqliteHelper48
             this.buttonEdit.TabIndex = 3;
             this.buttonEdit.Text = "Edit";
             this.buttonEdit.UseVisualStyleBackColor = true;
+            this.buttonEdit.Click += new System.EventHandler(this.buttonEdit_Click);
             // 
             // buttonDelete
             // 
@@ -75,6 +78,7 @@ namespace SqliteHelper48
             this.buttonDelete.TabIndex = 4;
             this.buttonDelete.Text = "Delete";
             this.buttonDelete.UseVisualStyleBackColor = true;
+            this.buttonDelete.Click += new System.EventHandler(this.buttonDelete_Click);
             // 
             // buttonClose
             // 
@@ -84,15 +88,19 @@ namespace SqliteHelper48
             this.buttonClose.TabIndex = 5;
             this.buttonClose.Text = "Close";
             this.buttonClose.UseVisualStyleBackColor = true;
+            this.buttonClose.Click += new System.EventHandler(this.buttonClose_Click);
             // 
             // themeManager1
             // 
+            this.themeManager1.ExcludedControlTypes.Add("ICSharpCode.TextEditor.TextEditorControl");
+            this.themeManager1.ExcludedControlTypes.Add("ZidUtilities.CommonCode.ICSharpTextEditor.ExtendedEditor");
             this.themeManager1.ParentForm = this;
             // 
             // ManageRelationshipsDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.CancelButton = this.buttonClose;
             this.ClientSize = new System.Drawing.Size(583, 321);
             this.Controls.Add(this.buttonClose);
             this.Controls.Add(this.buttonDelete);
@@ -106,7 +114,7 @@ namespace SqliteHelper48
             this.Name = "ManageRelationshipsDialog";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Manage Relationships";
-            this.Load += new System.EventHandler(this.ManageRelationshipsDialog_Load_1);
+            this.Load += new System.EventHandler(this.ManageRelationshipsDialog_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

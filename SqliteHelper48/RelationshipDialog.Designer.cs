@@ -20,191 +20,198 @@ namespace SqliteHelper48
 
         private void InitializeComponent()
         {
-            components = new System.ComponentModel.Container();
-            labelFrom = new Label();
-            labelFromTable = new Label();
-            comboFromTable = new ComboBox();
-            labelFromColumn = new Label();
-            comboFromColumn = new ComboBox();
-            labelTo = new Label();
-            labelToTable = new Label();
-            comboToTable = new ComboBox();
-            labelToColumn = new Label();
-            comboToColumn = new ComboBox();
-            labelRelationType = new Label();
-            comboRelationType = new ComboBox();
-            buttonOK = new Button();
-            buttonCancel = new Button();
-            themeManager1 = new ZidUtilities.CommonCode.Win.Controls.ThemeManager(components);
-            SuspendLayout();
-            //
-            // themeManager1
-            //
-            themeManager1.ParentForm = this;
-            //
+            this.components = new System.ComponentModel.Container();
+            this.labelFrom = new System.Windows.Forms.Label();
+            this.labelFromTable = new System.Windows.Forms.Label();
+            this.comboFromTable = new System.Windows.Forms.ComboBox();
+            this.labelFromColumn = new System.Windows.Forms.Label();
+            this.comboFromColumn = new System.Windows.Forms.ComboBox();
+            this.labelTo = new System.Windows.Forms.Label();
+            this.labelToTable = new System.Windows.Forms.Label();
+            this.comboToTable = new System.Windows.Forms.ComboBox();
+            this.labelToColumn = new System.Windows.Forms.Label();
+            this.comboToColumn = new System.Windows.Forms.ComboBox();
+            this.labelRelationType = new System.Windows.Forms.Label();
+            this.comboRelationType = new System.Windows.Forms.ComboBox();
+            this.buttonOK = new System.Windows.Forms.Button();
+            this.buttonCancel = new System.Windows.Forms.Button();
+            this.themeManager1 = new ZidUtilities.CommonCode.Win.Controls.ThemeManager(this.components);
+            this.SuspendLayout();
+            // 
             // labelFrom
-            //
-            labelFrom.AutoSize = true;
-            labelFrom.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            labelFrom.Location = new Point(12, 15);
-            labelFrom.Name = "labelFrom";
-            labelFrom.Size = new Size(38, 15);
-            labelFrom.TabIndex = 0;
-            labelFrom.Text = "From:";
-            //
+            // 
+            this.labelFrom.AutoSize = true;
+            this.labelFrom.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.labelFrom.Location = new System.Drawing.Point(10, 13);
+            this.labelFrom.Name = "labelFrom";
+            this.labelFrom.Size = new System.Drawing.Size(39, 15);
+            this.labelFrom.TabIndex = 0;
+            this.labelFrom.Text = "From:";
+            // 
             // labelFromTable
-            //
-            labelFromTable.AutoSize = true;
-            labelFromTable.Location = new Point(12, 40);
-            labelFromTable.Name = "labelFromTable";
-            labelFromTable.Size = new Size(37, 15);
-            labelFromTable.TabIndex = 1;
-            labelFromTable.Text = "Table:";
-            //
+            // 
+            this.labelFromTable.AutoSize = true;
+            this.labelFromTable.Location = new System.Drawing.Point(10, 35);
+            this.labelFromTable.Name = "labelFromTable";
+            this.labelFromTable.Size = new System.Drawing.Size(37, 13);
+            this.labelFromTable.TabIndex = 1;
+            this.labelFromTable.Text = "Table:";
+            // 
             // comboFromTable
-            //
-            comboFromTable.DropDownStyle = ComboBoxStyle.DropDownList;
-            comboFromTable.FormattingEnabled = true;
-            comboFromTable.Location = new Point(80, 37);
-            comboFromTable.Name = "comboFromTable";
-            comboFromTable.Size = new Size(250, 23);
-            comboFromTable.TabIndex = 2;
-            comboFromTable.SelectedIndexChanged += comboFromTable_SelectedIndexChanged;
-            //
+            // 
+            this.comboFromTable.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboFromTable.FormattingEnabled = true;
+            this.comboFromTable.Location = new System.Drawing.Point(69, 32);
+            this.comboFromTable.Name = "comboFromTable";
+            this.comboFromTable.Size = new System.Drawing.Size(215, 21);
+            this.comboFromTable.TabIndex = 2;
+            this.comboFromTable.SelectedIndexChanged += new System.EventHandler(this.comboFromTable_SelectedIndexChanged);
+            // 
             // labelFromColumn
-            //
-            labelFromColumn.AutoSize = true;
-            labelFromColumn.Location = new Point(12, 70);
-            labelFromColumn.Name = "labelFromColumn";
-            labelFromColumn.Size = new Size(53, 15);
-            labelFromColumn.TabIndex = 3;
-            labelFromColumn.Text = "Column:";
-            //
+            // 
+            this.labelFromColumn.AutoSize = true;
+            this.labelFromColumn.Location = new System.Drawing.Point(10, 61);
+            this.labelFromColumn.Name = "labelFromColumn";
+            this.labelFromColumn.Size = new System.Drawing.Size(45, 13);
+            this.labelFromColumn.TabIndex = 3;
+            this.labelFromColumn.Text = "Column:";
+            // 
             // comboFromColumn
-            //
-            comboFromColumn.DropDownStyle = ComboBoxStyle.DropDownList;
-            comboFromColumn.FormattingEnabled = true;
-            comboFromColumn.Location = new Point(80, 67);
-            comboFromColumn.Name = "comboFromColumn";
-            comboFromColumn.Size = new Size(250, 23);
-            comboFromColumn.TabIndex = 4;
-            //
+            // 
+            this.comboFromColumn.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboFromColumn.FormattingEnabled = true;
+            this.comboFromColumn.Location = new System.Drawing.Point(69, 58);
+            this.comboFromColumn.Name = "comboFromColumn";
+            this.comboFromColumn.Size = new System.Drawing.Size(215, 21);
+            this.comboFromColumn.TabIndex = 4;
+            // 
             // labelTo
-            //
-            labelTo.AutoSize = true;
-            labelTo.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            labelTo.Location = new Point(12, 110);
-            labelTo.Name = "labelTo";
-            labelTo.Size = new Size(23, 15);
-            labelTo.TabIndex = 5;
-            labelTo.Text = "To:";
-            //
+            // 
+            this.labelTo.AutoSize = true;
+            this.labelTo.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.labelTo.Location = new System.Drawing.Point(10, 95);
+            this.labelTo.Name = "labelTo";
+            this.labelTo.Size = new System.Drawing.Size(23, 15);
+            this.labelTo.TabIndex = 5;
+            this.labelTo.Text = "To:";
+            // 
             // labelToTable
-            //
-            labelToTable.AutoSize = true;
-            labelToTable.Location = new Point(12, 135);
-            labelToTable.Name = "labelToTable";
-            labelToTable.Size = new Size(37, 15);
-            labelToTable.TabIndex = 6;
-            labelToTable.Text = "Table:";
-            //
+            // 
+            this.labelToTable.AutoSize = true;
+            this.labelToTable.Location = new System.Drawing.Point(10, 117);
+            this.labelToTable.Name = "labelToTable";
+            this.labelToTable.Size = new System.Drawing.Size(37, 13);
+            this.labelToTable.TabIndex = 6;
+            this.labelToTable.Text = "Table:";
+            // 
             // comboToTable
-            //
-            comboToTable.DropDownStyle = ComboBoxStyle.DropDownList;
-            comboToTable.FormattingEnabled = true;
-            comboToTable.Location = new Point(80, 132);
-            comboToTable.Name = "comboToTable";
-            comboToTable.Size = new Size(250, 23);
-            comboToTable.TabIndex = 7;
-            comboToTable.SelectedIndexChanged += comboToTable_SelectedIndexChanged;
-            //
+            // 
+            this.comboToTable.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboToTable.FormattingEnabled = true;
+            this.comboToTable.Location = new System.Drawing.Point(69, 114);
+            this.comboToTable.Name = "comboToTable";
+            this.comboToTable.Size = new System.Drawing.Size(215, 21);
+            this.comboToTable.TabIndex = 7;
+            this.comboToTable.SelectedIndexChanged += new System.EventHandler(this.comboToTable_SelectedIndexChanged);
+            // 
             // labelToColumn
-            //
-            labelToColumn.AutoSize = true;
-            labelToColumn.Location = new Point(12, 165);
-            labelToColumn.Name = "labelToColumn";
-            labelToColumn.Size = new Size(53, 15);
-            labelToColumn.TabIndex = 8;
-            labelToColumn.Text = "Column:";
-            //
+            // 
+            this.labelToColumn.AutoSize = true;
+            this.labelToColumn.Location = new System.Drawing.Point(10, 143);
+            this.labelToColumn.Name = "labelToColumn";
+            this.labelToColumn.Size = new System.Drawing.Size(45, 13);
+            this.labelToColumn.TabIndex = 8;
+            this.labelToColumn.Text = "Column:";
+            // 
             // comboToColumn
-            //
-            comboToColumn.DropDownStyle = ComboBoxStyle.DropDownList;
-            comboToColumn.FormattingEnabled = true;
-            comboToColumn.Location = new Point(80, 162);
-            comboToColumn.Name = "comboToColumn";
-            comboToColumn.Size = new Size(250, 23);
-            comboToColumn.TabIndex = 9;
-            //
+            // 
+            this.comboToColumn.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboToColumn.FormattingEnabled = true;
+            this.comboToColumn.Location = new System.Drawing.Point(69, 140);
+            this.comboToColumn.Name = "comboToColumn";
+            this.comboToColumn.Size = new System.Drawing.Size(215, 21);
+            this.comboToColumn.TabIndex = 9;
+            // 
             // labelRelationType
-            //
-            labelRelationType.AutoSize = true;
-            labelRelationType.Location = new Point(12, 205);
-            labelRelationType.Name = "labelRelationType";
-            labelRelationType.Size = new Size(34, 15);
-            labelRelationType.TabIndex = 10;
-            labelRelationType.Text = "Type:";
-            //
+            // 
+            this.labelRelationType.AutoSize = true;
+            this.labelRelationType.Location = new System.Drawing.Point(10, 178);
+            this.labelRelationType.Name = "labelRelationType";
+            this.labelRelationType.Size = new System.Drawing.Size(34, 13);
+            this.labelRelationType.TabIndex = 10;
+            this.labelRelationType.Text = "Type:";
+            // 
             // comboRelationType
-            //
-            comboRelationType.DropDownStyle = ComboBoxStyle.DropDownList;
-            comboRelationType.FormattingEnabled = true;
-            comboRelationType.Items.AddRange(new object[] { "One-to-One", "One-to-Many", "Many-to-Many" });
-            comboRelationType.Location = new Point(80, 202);
-            comboRelationType.Name = "comboRelationType";
-            comboRelationType.Size = new Size(250, 23);
-            comboRelationType.TabIndex = 11;
-            //
+            // 
+            this.comboRelationType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboRelationType.FormattingEnabled = true;
+            this.comboRelationType.Items.AddRange(new object[] {
+            "One-to-One",
+            "One-to-Many",
+            "Many-to-Many"});
+            this.comboRelationType.Location = new System.Drawing.Point(69, 175);
+            this.comboRelationType.Name = "comboRelationType";
+            this.comboRelationType.Size = new System.Drawing.Size(215, 21);
+            this.comboRelationType.TabIndex = 11;
+            // 
             // buttonOK
-            //
-            buttonOK.Location = new Point(174, 245);
-            buttonOK.Name = "buttonOK";
-            buttonOK.Size = new Size(75, 23);
-            buttonOK.TabIndex = 12;
-            buttonOK.Text = "OK";
-            buttonOK.UseVisualStyleBackColor = true;
-            buttonOK.Click += buttonOK_Click;
-            //
+            // 
+            this.buttonOK.Location = new System.Drawing.Point(149, 212);
+            this.buttonOK.Name = "buttonOK";
+            this.buttonOK.Size = new System.Drawing.Size(64, 20);
+            this.buttonOK.TabIndex = 12;
+            this.buttonOK.Text = "OK";
+            this.buttonOK.UseVisualStyleBackColor = true;
+            this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
+            // 
             // buttonCancel
-            //
-            buttonCancel.Location = new Point(255, 245);
-            buttonCancel.Name = "buttonCancel";
-            buttonCancel.Size = new Size(75, 23);
-            buttonCancel.TabIndex = 13;
-            buttonCancel.Text = "Cancel";
-            buttonCancel.UseVisualStyleBackColor = true;
-            buttonCancel.Click += buttonCancel_Click;
-            //
+            // 
+            this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.buttonCancel.Location = new System.Drawing.Point(219, 212);
+            this.buttonCancel.Name = "buttonCancel";
+            this.buttonCancel.Size = new System.Drawing.Size(64, 20);
+            this.buttonCancel.TabIndex = 13;
+            this.buttonCancel.Text = "Cancel";
+            this.buttonCancel.UseVisualStyleBackColor = true;
+            this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
+            // 
+            // themeManager1
+            // 
+            this.themeManager1.ExcludedControlTypes.Add("ICSharpCode.TextEditor.TextEditorControl");
+            this.themeManager1.ExcludedControlTypes.Add("ZidUtilities.CommonCode.ICSharpTextEditor.ExtendedEditor");
+            this.themeManager1.ParentForm = this;
+            // 
             // RelationshipDialog
-            //
-            AcceptButton = buttonOK;
-            AutoScaleDimensions = new SizeF(7F, 15F);
-            AutoScaleMode = AutoScaleMode.Font;
-            CancelButton = buttonCancel;
-            ClientSize = new Size(344, 280);
-            Controls.Add(buttonCancel);
-            Controls.Add(buttonOK);
-            Controls.Add(comboRelationType);
-            Controls.Add(labelRelationType);
-            Controls.Add(comboToColumn);
-            Controls.Add(labelToColumn);
-            Controls.Add(comboToTable);
-            Controls.Add(labelToTable);
-            Controls.Add(labelTo);
-            Controls.Add(comboFromColumn);
-            Controls.Add(labelFromColumn);
-            Controls.Add(comboFromTable);
-            Controls.Add(labelFromTable);
-            Controls.Add(labelFrom);
-            FormBorderStyle = FormBorderStyle.FixedDialog;
-            MaximizeBox = false;
-            MinimizeBox = false;
-            Name = "RelationshipDialog";
-            StartPosition = FormStartPosition.CenterParent;
-            Text = "Relationship";
-            Load += RelationshipDialog_Load;
-            ResumeLayout(false);
-            PerformLayout();
+            // 
+            this.AcceptButton = this.buttonOK;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.CancelButton = this.buttonCancel;
+            this.ClientSize = new System.Drawing.Size(295, 243);
+            this.Controls.Add(this.buttonCancel);
+            this.Controls.Add(this.buttonOK);
+            this.Controls.Add(this.comboRelationType);
+            this.Controls.Add(this.labelRelationType);
+            this.Controls.Add(this.comboToColumn);
+            this.Controls.Add(this.labelToColumn);
+            this.Controls.Add(this.comboToTable);
+            this.Controls.Add(this.labelToTable);
+            this.Controls.Add(this.labelTo);
+            this.Controls.Add(this.comboFromColumn);
+            this.Controls.Add(this.labelFromColumn);
+            this.Controls.Add(this.comboFromTable);
+            this.Controls.Add(this.labelFromTable);
+            this.Controls.Add(this.labelFrom);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
+            this.Name = "RelationshipDialog";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+            this.Text = "Relationship";
+            this.Load += new System.EventHandler(this.RelationshipDialog_Load);
+            this.ResumeLayout(false);
+            this.PerformLayout();
+
         }
 
         #endregion

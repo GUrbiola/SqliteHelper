@@ -177,6 +177,13 @@ namespace SqliteHelper48
         private void saveButton_Click(object sender, EventArgs e)
         {
             SaveProject();
+            ZidUtilities.CommonCode.Win.Forms.MessageBoxDialog.Show(
+                "Project saved successfully.",
+                "Save Project",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information,
+                themeManager1.Theme
+                );
         }
 
         private void DiagramDesignerForm_FormClosing(object sender, FormClosingEventArgs e)

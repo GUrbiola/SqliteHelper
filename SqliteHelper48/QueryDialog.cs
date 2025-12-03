@@ -375,7 +375,7 @@ namespace SqliteHelper48
                         SingleSelectionDialog dialog = new SingleSelectionDialog();
                         dialog.DialogTitle = "Snippets";
                         dialog.Message = "Please select one snippet:";
-                        dialog.Style = DialogStyle.Information;
+                        dialog.Theme = themeManager1.Theme;
                         dialog.Required = true;
                         dialog.DialogImage = Properties.Resources.Piece48;
                         dialog.SetDataSource(SnippetsDict);
@@ -502,7 +502,7 @@ namespace SqliteHelper48
                 SingleSelectionDialog dialog = new SingleSelectionDialog();
                 dialog.DialogTitle = "Db Objects";
                 dialog.Message = "Please select one table/view";
-                dialog.Style = DialogStyle.Information;
+                dialog.Theme = themeManager1.Theme;
                 dialog.Required = true;
                 dialog.DialogImage = Properties.Resources.Piece48;
                 DataTable source = values.ConvertToDataTable("DbObjects");
@@ -702,7 +702,7 @@ namespace SqliteHelper48
                 MultiSelectionDialog dialog = new MultiSelectionDialog();
                 dialog.DialogTitle = "Select Fields/Parameters";
                 dialog.Message = $"Select Childs for: {parent.Name}";
-                dialog.Style = DialogStyle.Information;
+                dialog.Theme = themeManager1.Theme;
                 dialog.Required = true;
                 dialog.DialogImage = Properties.Resources.Field48;
                 DataTable source = parent.Childs.ConvertToDataTable("DbFields");

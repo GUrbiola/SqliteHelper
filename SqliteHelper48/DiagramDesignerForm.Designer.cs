@@ -69,12 +69,14 @@ namespace SqliteHelper48
             this.generateInitScriptToolStripMenuItem.Name = "generateInitScriptToolStripMenuItem";
             this.generateInitScriptToolStripMenuItem.Size = new System.Drawing.Size(230, 22);
             this.generateInitScriptToolStripMenuItem.Text = "Generate &Initialization Script...";
+            this.generateInitScriptToolStripMenuItem.Click += new System.EventHandler(this.generateInitScriptToolStripMenuItem_Click);
             // 
             // generateUpdateScriptToolStripMenuItem
             // 
             this.generateUpdateScriptToolStripMenuItem.Name = "generateUpdateScriptToolStripMenuItem";
             this.generateUpdateScriptToolStripMenuItem.Size = new System.Drawing.Size(230, 22);
             this.generateUpdateScriptToolStripMenuItem.Text = "Generate &Update Script...";
+            this.generateUpdateScriptToolStripMenuItem.Click += new System.EventHandler(this.generateUpdateScriptToolStripMenuItem_Click);
             // 
             // toolStrip
             // 
@@ -176,9 +178,12 @@ namespace SqliteHelper48
             this.autoArrangeToolStripMenuItem.Name = "autoArrangeToolStripMenuItem";
             this.autoArrangeToolStripMenuItem.Size = new System.Drawing.Size(145, 22);
             this.autoArrangeToolStripMenuItem.Text = "&Auto Arrange";
+            this.autoArrangeToolStripMenuItem.Click += new System.EventHandler(this.autoArrangeToolStripMenuItem_Click);
             // 
             // themeManager1
             // 
+            this.themeManager1.ExcludedControlTypes.Add("ICSharpCode.TextEditor.TextEditorControl");
+            this.themeManager1.ExcludedControlTypes.Add("ZidUtilities.CommonCode.ICSharpTextEditor.ExtendedEditor");
             this.themeManager1.ParentForm = this;
             // 
             // DiagramDesignerForm

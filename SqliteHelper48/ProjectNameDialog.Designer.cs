@@ -20,74 +20,78 @@ namespace SqliteHelper48
 
         private void InitializeComponent()
         {
-            components = new System.ComponentModel.Container();
-            labelPrompt = new Label();
-            textBoxProjectName = new TextBox();
-            buttonOK = new Button();
-            buttonCancel = new Button();
-            themeManager1 = new ZidUtilities.CommonCode.Win.Controls.ThemeManager(components);
-            SuspendLayout();
-            //
-            // themeManager1
-            //
-            themeManager1.ParentForm = this;
-            //
+            this.components = new System.ComponentModel.Container();
+            this.labelPrompt = new System.Windows.Forms.Label();
+            this.textBoxProjectName = new System.Windows.Forms.TextBox();
+            this.buttonOK = new System.Windows.Forms.Button();
+            this.buttonCancel = new System.Windows.Forms.Button();
+            this.themeManager1 = new ZidUtilities.CommonCode.Win.Controls.ThemeManager(this.components);
+            this.SuspendLayout();
+            // 
             // labelPrompt
-            //
-            labelPrompt.AutoSize = true;
-            labelPrompt.Location = new Point(12, 15);
-            labelPrompt.Name = "labelPrompt";
-            labelPrompt.Size = new Size(85, 15);
-            labelPrompt.TabIndex = 0;
-            labelPrompt.Text = "Project Name:";
-            //
+            // 
+            this.labelPrompt.AutoSize = true;
+            this.labelPrompt.Location = new System.Drawing.Point(10, 13);
+            this.labelPrompt.Name = "labelPrompt";
+            this.labelPrompt.Size = new System.Drawing.Size(74, 13);
+            this.labelPrompt.TabIndex = 0;
+            this.labelPrompt.Text = "Project Name:";
+            // 
             // textBoxProjectName
-            //
-            textBoxProjectName.Location = new Point(12, 35);
-            textBoxProjectName.Name = "textBoxProjectName";
-            textBoxProjectName.Size = new Size(360, 23);
-            textBoxProjectName.TabIndex = 1;
-            //
+            // 
+            this.textBoxProjectName.Location = new System.Drawing.Point(10, 30);
+            this.textBoxProjectName.Name = "textBoxProjectName";
+            this.textBoxProjectName.Size = new System.Drawing.Size(309, 20);
+            this.textBoxProjectName.TabIndex = 1;
+            // 
             // buttonOK
-            //
-            buttonOK.Location = new Point(216, 70);
-            buttonOK.Name = "buttonOK";
-            buttonOK.Size = new Size(75, 23);
-            buttonOK.TabIndex = 2;
-            buttonOK.Text = "OK";
-            buttonOK.UseVisualStyleBackColor = true;
-            buttonOK.Click += buttonOK_Click;
-            //
+            // 
+            this.buttonOK.Location = new System.Drawing.Point(185, 61);
+            this.buttonOK.Name = "buttonOK";
+            this.buttonOK.Size = new System.Drawing.Size(64, 20);
+            this.buttonOK.TabIndex = 2;
+            this.buttonOK.Text = "OK";
+            this.buttonOK.UseVisualStyleBackColor = true;
+            this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
+            // 
             // buttonCancel
-            //
-            buttonCancel.Location = new Point(297, 70);
-            buttonCancel.Name = "buttonCancel";
-            buttonCancel.Size = new Size(75, 23);
-            buttonCancel.TabIndex = 3;
-            buttonCancel.Text = "Cancel";
-            buttonCancel.UseVisualStyleBackColor = true;
-            buttonCancel.Click += buttonCancel_Click;
-            //
+            // 
+            this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.buttonCancel.Location = new System.Drawing.Point(255, 61);
+            this.buttonCancel.Name = "buttonCancel";
+            this.buttonCancel.Size = new System.Drawing.Size(64, 20);
+            this.buttonCancel.TabIndex = 3;
+            this.buttonCancel.Text = "Cancel";
+            this.buttonCancel.UseVisualStyleBackColor = true;
+            this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
+            // 
+            // themeManager1
+            // 
+            this.themeManager1.ExcludedControlTypes.Add("ICSharpCode.TextEditor.TextEditorControl");
+            this.themeManager1.ExcludedControlTypes.Add("ZidUtilities.CommonCode.ICSharpTextEditor.ExtendedEditor");
+            this.themeManager1.ParentForm = this;
+            // 
             // ProjectNameDialog
-            //
-            AcceptButton = buttonOK;
-            AutoScaleDimensions = new SizeF(7F, 15F);
-            AutoScaleMode = AutoScaleMode.Font;
-            CancelButton = buttonCancel;
-            ClientSize = new Size(384, 105);
-            Controls.Add(buttonCancel);
-            Controls.Add(buttonOK);
-            Controls.Add(textBoxProjectName);
-            Controls.Add(labelPrompt);
-            FormBorderStyle = FormBorderStyle.FixedDialog;
-            MaximizeBox = false;
-            MinimizeBox = false;
-            Name = "ProjectNameDialog";
-            StartPosition = FormStartPosition.CenterParent;
-            Text = "New Project";
-            Load += ProjectNameDialog_Load;
-            ResumeLayout(false);
-            PerformLayout();
+            // 
+            this.AcceptButton = this.buttonOK;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.CancelButton = this.buttonCancel;
+            this.ClientSize = new System.Drawing.Size(329, 91);
+            this.Controls.Add(this.buttonCancel);
+            this.Controls.Add(this.buttonOK);
+            this.Controls.Add(this.textBoxProjectName);
+            this.Controls.Add(this.labelPrompt);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
+            this.Name = "ProjectNameDialog";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+            this.Text = "New Project";
+            this.Load += new System.EventHandler(this.ProjectNameDialog_Load);
+            this.ResumeLayout(false);
+            this.PerformLayout();
+
         }
 
         #endregion

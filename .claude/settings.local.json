@@ -23,7 +23,11 @@
       "Bash(\"/c/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/MSBuild.exe\" \"D:\\Just For Fun\\SqliteHelper\\SqliteHelper48\\SqliteHelper48.csproj\" -t:Rebuild -p:Configuration=Debug -v:minimal)",
       "Bash(\"/c/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/MSBuild.exe\" \"D:\\Just For Fun\\SqliteHelper\\SqliteHelper48\\SqliteHelper48.csproj\" -t:Build -p:Configuration=Debug)",
       "Bash(\"C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/MSBuild.exe\" \"D:\\Just For Fun\\SqliteHelper\\SqliteHelper48\\SqliteHelper48.csproj\" -t:Build -p:Configuration=Debug)",
-      "Bash(\"C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/MSBuild.exe\" \"D:\\Just For Fun\\SqliteHelper\\SqliteHelper48\\SqliteHelper48.csproj\" -t:Rebuild -p:Configuration=Debug)"
+      "Bash(\"C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/MSBuild.exe\" \"D:\\Just For Fun\\SqliteHelper\\SqliteHelper48\\SqliteHelper48.csproj\" -t:Rebuild -p:Configuration=Debug)",
+      "Bash(\"C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/MSBuild.exe\" \"D:\\Just For Fun\\SqliteHelper\\SqliteHelper48\\SqliteHelper48.csproj\" -t:Rebuild -p:Configuration=Release -v:minimal)",
+      "Bash(cat:*)",
+      "Bash(powershell:*)",
+      "Bash(test:*)"
     ],
     "deny": [],
     "ask": []
