@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
+using System.Linq;
 using Microsoft.Data.Sqlite;
 
 namespace SqliteHelper48
@@ -455,6 +456,353 @@ namespace SqliteHelper48
             catch
             {
                 return string.Empty;
+            }
+        }
+
+        public List<string> GetTableIndexes(string tableName)
+        {
+            var indexes = new List<string>();
+
+            if (connection == null || connection.State != ConnectionState.Open)
+                return indexes;
+
+            try
+            {
+                using (var cmd = connection.CreateCommand())
+                {
+                    // Get all indexes for this table (excluding auto-generated ones)
+                    cmd.CommandText = $"SELECT sql FROM sqlite_master WHERE type='index' AND tbl_name='{tableName}' AND sql IS NOT NULL";
+                    using var reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        var sql = reader.GetString(0);
+                        if (!string.IsNullOrEmpty(sql))
+                        {
+                            indexes.Add(sql);
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                // Return empty list on error
+            }
+
+            return indexes;
+        }
+
+        public bool CopyTableStructure(string sourceTableName, string newTableName, out string errorMessage)
+        {
+            errorMessage = string.Empty;
+
+            if (connection == null || connection.State != ConnectionState.Open)
+            {
+                errorMessage = "Database is not open.";
+                return false;
+            }
+
+            var transaction = connection.BeginTransaction();
+
+            try
+            {
+                // Step 1: Get the original table creation SQL
+                string originalSql;
+                using (var cmd = connection.CreateCommand())
+                {
+                    cmd.Transaction = transaction;
+                    cmd.CommandText = $"SELECT sql FROM sqlite_master WHERE type='table' AND name='{sourceTableName}'";
+                    originalSql = cmd.ExecuteScalar()?.ToString() ?? string.Empty;
+
+                    if (string.IsNullOrEmpty(originalSql))
+                    {
+                        errorMessage = $"Table '{sourceTableName}' not found.";
+                        transaction.Rollback();
+                        return false;
+                    }
+                }
+
+                // Step 2: Replace table name in SQL
+                string newTableSql = originalSql.Replace($"CREATE TABLE {sourceTableName}", $"CREATE TABLE {newTableName}")
+                                                 .Replace($"CREATE TABLE \"{sourceTableName}\"", $"CREATE TABLE \"{newTableName}\"")
+                                                 .Replace($"CREATE TABLE '{sourceTableName}'", $"CREATE TABLE '{newTableName}'")
+                                                 .Replace($"CREATE TABLE [{sourceTableName}]", $"CREATE TABLE [{newTableName}]");
+
+                // Step 3: Create the new table
+                using (var cmd = connection.CreateCommand())
+                {
+                    cmd.Transaction = transaction;
+                    cmd.CommandText = newTableSql;
+                    cmd.ExecuteNonQuery();
+                }
+
+                // Step 4: Get and recreate indexes
+                var indexes = GetTableIndexes(sourceTableName);
+                foreach (var indexSql in indexes)
+                {
+                    // Replace the table name in index SQL
+                    string newIndexSql = indexSql.Replace($" ON {sourceTableName}", $" ON {newTableName}")
+                                                 .Replace($" ON \"{sourceTableName}\"", $" ON \"{newTableName}\"")
+                                                 .Replace($" ON '{sourceTableName}'", $" ON '{newTableName}'")
+                                                 .Replace($" ON [{sourceTableName}]", $" ON [{newTableName}]");
+
+                    // Also need to rename the index itself to avoid conflicts
+                    // Extract index name and create a new one
+                    var match = System.Text.RegularExpressions.Regex.Match(newIndexSql, @"CREATE\s+(?:UNIQUE\s+)?INDEX\s+(?:IF\s+NOT\s+EXISTS\s+)?([^\s]+)", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+                    if (match.Success)
+                    {
+                        string oldIndexName = match.Groups[1].Value.Trim('"', '\'', '[', ']');
+                        string newIndexName = $"{oldIndexName}_{newTableName}";
+                        newIndexSql = newIndexSql.Replace(match.Groups[1].Value, $"\"{newIndexName}\"");
+                    }
+
+                    using (var cmd = connection.CreateCommand())
+                    {
+                        cmd.Transaction = transaction;
+                        cmd.CommandText = newIndexSql;
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+
+                transaction.Commit();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                try
+                {
+                    transaction.Rollback();
+                }
+                catch
+                {
+                    // Ignore rollback errors
+                }
+
+                errorMessage = $"Error copying table structure: {ex.Message}";
+                return false;
+            }
+        }
+
+        public bool CloneTable(string sourceTableName, string newTableName, out string errorMessage)
+        {
+            errorMessage = string.Empty;
+
+            if (connection == null || connection.State != ConnectionState.Open)
+            {
+                errorMessage = "Database is not open.";
+                return false;
+            }
+
+            // First, copy the structure
+            if (!CopyTableStructure(sourceTableName, newTableName, out errorMessage))
+            {
+                return false;
+            }
+
+            var transaction = connection.BeginTransaction();
+
+            try
+            {
+                // Get column names from the source table
+                var columns = new List<string>();
+                using (var cmd = connection.CreateCommand())
+                {
+                    cmd.Transaction = transaction;
+                    cmd.CommandText = $"PRAGMA table_info('{sourceTableName}')";
+                    using var reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        columns.Add(reader.GetString(1));
+                    }
+                }
+
+                // Copy all data
+                if (columns.Count > 0)
+                {
+                    var columnList = string.Join(", ", columns.Select(c => $"\"{c}\""));
+                    using (var cmd = connection.CreateCommand())
+                    {
+                        cmd.Transaction = transaction;
+                        cmd.CommandText = $"INSERT INTO {newTableName} ({columnList}) SELECT {columnList} FROM {sourceTableName}";
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+
+                transaction.Commit();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                try
+                {
+                    transaction.Rollback();
+
+                    // If data copy failed, try to clean up the table we created
+                    using (var cmd = connection.CreateCommand())
+                    {
+                        cmd.CommandText = $"DROP TABLE IF EXISTS {newTableName}";
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+                catch
+                {
+                    // Ignore cleanup errors
+                }
+
+                errorMessage = $"Error cloning table data: {ex.Message}";
+                return false;
+            }
+        }
+
+        public bool AlterTableStructure(string tableName, string newTableSql, out string errorMessage)
+        {
+            errorMessage = string.Empty;
+
+            if (connection == null || connection.State != ConnectionState.Open)
+            {
+                errorMessage = "Database is not open.";
+                return false;
+            }
+
+            var transaction = connection.BeginTransaction();
+            string tempTableName = $"temp_{tableName}_{DateTime.Now.Ticks}";
+            string originalTableSql = string.Empty;
+
+            try
+            {
+                // Step 1: Get the original table creation SQL
+                using (var cmd = connection.CreateCommand())
+                {
+                    cmd.Transaction = transaction;
+                    cmd.CommandText = $"SELECT sql FROM sqlite_master WHERE type='table' AND name='{tableName}'";
+                    originalTableSql = cmd.ExecuteScalar()?.ToString() ?? string.Empty;
+
+                    if (string.IsNullOrEmpty(originalTableSql))
+                    {
+                        errorMessage = $"Table '{tableName}' not found.";
+                        transaction.Rollback();
+                        return false;
+                    }
+                }
+
+                // Step 2: Save current data to temporary table
+                using (var cmd = connection.CreateCommand())
+                {
+                    cmd.Transaction = transaction;
+                    cmd.CommandText = $"CREATE TEMPORARY TABLE {tempTableName} AS SELECT * FROM {tableName}";
+                    cmd.ExecuteNonQuery();
+                }
+
+                // Step 3: Get column names from the original table for data restoration
+                var originalColumns = new List<string>();
+                using (var cmd = connection.CreateCommand())
+                {
+                    cmd.Transaction = transaction;
+                    cmd.CommandText = $"PRAGMA table_info('{tableName}')";
+                    using var reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        originalColumns.Add(reader.GetString(1));
+                    }
+                }
+
+                // Step 4: Drop the original table
+                using (var cmd = connection.CreateCommand())
+                {
+                    cmd.Transaction = transaction;
+                    cmd.CommandText = $"DROP TABLE {tableName}";
+                    cmd.ExecuteNonQuery();
+                }
+
+                // Step 5: Create new table with updated structure
+                using (var cmd = connection.CreateCommand())
+                {
+                    cmd.Transaction = transaction;
+                    cmd.CommandText = newTableSql;
+                    cmd.ExecuteNonQuery();
+                }
+
+                // Step 6: Get column names from the new table
+                var newColumns = new List<string>();
+                using (var cmd = connection.CreateCommand())
+                {
+                    cmd.Transaction = transaction;
+                    cmd.CommandText = $"PRAGMA table_info('{tableName}')";
+                    using var reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        newColumns.Add(reader.GetString(1));
+                    }
+                }
+
+                // Step 7: Find matching columns between old and new tables
+                var matchingColumns = originalColumns.Intersect(newColumns).ToList();
+
+                // Step 8: Reload data from temporary table (only matching columns)
+                if (matchingColumns.Count > 0)
+                {
+                    try
+                    {
+                        var columnList = string.Join(", ", matchingColumns.Select(c => $"\"{c}\""));
+                        using (var cmd = connection.CreateCommand())
+                        {
+                            cmd.Transaction = transaction;
+                            // Disable foreign key constraints temporarily
+                            cmd.CommandText = "PRAGMA foreign_keys = OFF";
+                            cmd.ExecuteNonQuery();
+                        }
+
+                        using (var cmd = connection.CreateCommand())
+                        {
+                            cmd.Transaction = transaction;
+                            cmd.CommandText = $"INSERT INTO {tableName} ({columnList}) SELECT {columnList} FROM {tempTableName}";
+                            cmd.ExecuteNonQuery();
+                        }
+
+                        using (var cmd = connection.CreateCommand())
+                        {
+                            cmd.Transaction = transaction;
+                            // Re-enable foreign key constraints
+                            cmd.CommandText = "PRAGMA foreign_keys = ON";
+                            cmd.ExecuteNonQuery();
+                        }
+                    }
+                    catch (Exception dataEx)
+                    {
+                        // Data loading failed - ask user if they want to proceed without data
+                        errorMessage = $"Error loading data: {dataEx.Message}\n\nDo you want to proceed and lose all existing data?";
+
+                        // Rollback everything
+                        transaction.Rollback();
+                        return false;
+                    }
+                }
+
+                // Step 9: Drop temporary table
+                using (var cmd = connection.CreateCommand())
+                {
+                    cmd.Transaction = transaction;
+                    cmd.CommandText = $"DROP TABLE {tempTableName}";
+                    cmd.ExecuteNonQuery();
+                }
+
+                // Commit the transaction
+                transaction.Commit();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                // Rollback on any error
+                try
+                {
+                    transaction.Rollback();
+                }
+                catch
+                {
+                    // Ignore rollback errors
+                }
+
+                errorMessage = $"Error altering table structure: {ex.Message}";
+                return false;
             }
         }
 

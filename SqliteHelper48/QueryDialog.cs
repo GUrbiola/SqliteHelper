@@ -36,6 +36,8 @@ namespace SqliteHelper48
             this.databaseManager = databaseManager;
         }
 
+        public string InitialSqlText { get; set; } = string.Empty;
+
         private void QueryDialog_Load(object? sender, EventArgs e)
         {
             string savedTheme = Properties.Settings.Default.SelectedTheme;
@@ -48,6 +50,12 @@ namespace SqliteHelper48
             LoadSnippets();
 
             extendedEditor1.WhenKeyPress += OnEditorKeyPress;
+
+            // Set initial SQL text if provided
+            if (!string.IsNullOrEmpty(InitialSqlText))
+            {
+                extendedEditor1.Editor.Text = InitialSqlText;
+            }
         }
 
         private void LoadSnippets()

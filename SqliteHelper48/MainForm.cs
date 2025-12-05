@@ -31,6 +31,9 @@ namespace SqliteHelper48
 
             // Add MouseUp event for TreeView context menus
             databaseTreeView.MouseUp += databaseTreeView_MouseUp;
+
+            // Add DoubleClick event for opening creation scripts
+            databaseTreeView.DoubleClick += databaseTreeView_DoubleClick;
         }
 
         private void createProjectToolStripMenuItem_Click(object sender, EventArgs e)
@@ -578,6 +581,7 @@ namespace SqliteHelper48
             saveCopyOfDatabaseToolStripMenuItem.Enabled = enabled;
             runQueryToolStripMenuItem.Enabled = enabled;
             reloadDatabaseToolStripMenuItem.Enabled = enabled;
+            createClaudeDocumentationToolStripMenuItem.Enabled = enabled;
         }
 
         private void UpdateStatusBar()
@@ -914,6 +918,53 @@ namespace SqliteHelper48
             }
         }
 
+        private void databaseTreeView_DoubleClick(object? sender, EventArgs e)
+        {
+            if (databaseTreeView.SelectedNode == null || databaseTreeView.SelectedNode.Tag == null)
+                return;
+
+            string tag = databaseTreeView.SelectedNode.Tag.ToString() ?? "";
+            if (string.IsNullOrEmpty(tag))
+                return;
+
+            var parts = tag.Split(':');
+            if (parts.Length != 2)
+                return;
+
+            var objectType = parts[0];
+            var objectName = parts[1];
+
+            string creationScript = string.Empty;
+
+            switch (objectType)
+            {
+                case "table":
+                    creationScript = databaseManager.GetTableSql(objectName);
+                    break;
+
+                case "view":
+                    creationScript = databaseManager.GetViewSql(objectName);
+                    break;
+
+                default:
+                    return; // Only handle tables and views
+            }
+
+            if (string.IsNullOrEmpty(creationScript))
+            {
+                MessageBox.Show($"Could not retrieve creation script for {objectType} '{objectName}'.",
+                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            // Open QueryDialog with the creation script
+            var queryDialog = new QueryDialog(databaseManager)
+            {
+                InitialSqlText = creationScript
+            };
+            queryDialog.Show();
+        }
+
         private void createTableToolStripMenuItem_Click(object sender, EventArgs e)
         {
             using var dialog = new TableEditorDialog();
@@ -935,6 +986,268 @@ namespace SqliteHelper48
                 {
                     MessageBox.Show($"Error creating table:\n\n{ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
+            }
+        }
+
+        private void editTableToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (databaseTreeView.SelectedNode == null)
+                return;
+
+            string tag = databaseTreeView.SelectedNode.Tag?.ToString() ?? "";
+            if (!tag.StartsWith("table:"))
+                return;
+
+            string tableName = tag.Substring(6); // Remove "table:" prefix
+
+            try
+            {
+                // Get current table structure
+                var columnInfos = databaseManager.GetTableColumnInfo(tableName);
+                if (columnInfos.Count == 0)
+                {
+                    MessageBox.Show("Could not retrieve table structure.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                // Convert to TableDefinition
+                var tableDefinition = ConvertToTableDefinition(tableName, columnInfos);
+
+                // Open TableEditorDialog with existing table
+                using var dialog = new TableEditorDialog(tableDefinition);
+                if (dialog.ShowDialog() == DialogResult.OK)
+                {
+                    // Get the new SQL from the dialog
+                    string newTableSql = dialog.TableSql;
+
+                    if (string.IsNullOrEmpty(newTableSql))
+                    {
+                        MessageBox.Show("Invalid table SQL generated.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+
+                    // Replace "CREATE TABLE IF NOT EXISTS" with "CREATE TABLE" for the alter operation
+                    newTableSql = newTableSql.Replace("CREATE TABLE IF NOT EXISTS", "CREATE TABLE");
+
+                    // Attempt to alter the table structure
+                    if (databaseManager.AlterTableStructure(tableName, newTableSql, out string errorMessage))
+                    {
+                        // Success
+                        LoadDatabaseStructure();
+                        if (currentTableName == tableName)
+                        {
+                            LoadTableData(tableName);
+                        }
+                        MessageBox.Show($"Table '{tableName}' structure updated successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    else
+                    {
+                        // Check if this is a data loading error
+                        if (errorMessage.Contains("Error loading data:"))
+                        {
+                            // Ask user if they want to proceed without data
+                            var result = MessageBox.Show(errorMessage, "Data Loading Error", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+
+                            if (result == DialogResult.Yes)
+                            {
+                                // User wants to proceed - retry without data preservation
+                                // We need to implement a version that doesn't try to restore data
+                                if (AlterTableWithoutDataPreservation(tableName, newTableSql, out string error2))
+                                {
+                                    LoadDatabaseStructure();
+                                    if (currentTableName == tableName)
+                                    {
+                                        LoadTableData(tableName);
+                                    }
+                                    MessageBox.Show($"Table '{tableName}' structure updated successfully.\n\nWarning: Original data was lost.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                }
+                                else
+                                {
+                                    MessageBox.Show($"Error updating table structure:\n\n{error2}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            MessageBox.Show($"Error updating table structure:\n\n{errorMessage}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error editing table:\n\n{ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private bool AlterTableWithoutDataPreservation(string tableName, string newTableSql, out string errorMessage)
+        {
+            errorMessage = string.Empty;
+
+            try
+            {
+                // Simply drop and recreate the table
+                string dropQuery = $"DROP TABLE IF EXISTS {tableName}";
+                if (!databaseManager.ExecuteNonQuery(dropQuery, out errorMessage))
+                {
+                    return false;
+                }
+
+                if (!databaseManager.ExecuteNonQuery(newTableSql, out errorMessage))
+                {
+                    return false;
+                }
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                errorMessage = $"Error altering table: {ex.Message}";
+                return false;
+            }
+        }
+
+        private void copyTableToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (databaseTreeView.SelectedNode == null)
+                return;
+
+            string tag = databaseTreeView.SelectedNode.Tag?.ToString() ?? "";
+            if (!tag.StartsWith("table:"))
+                return;
+
+            string sourceTableName = tag.Substring(6); // Remove "table:" prefix
+
+            try
+            {
+                // Prompt user for new table name
+                string newTableName = Microsoft.VisualBasic.Interaction.InputBox(
+                    $"Enter the name for the copy of table '{sourceTableName}':",
+                    "Copy Table",
+                    $"{sourceTableName}_copy"
+                );
+
+                // Check if user cancelled
+                if (string.IsNullOrWhiteSpace(newTableName))
+                {
+                    return;
+                }
+
+                // Validate table name
+                if (newTableName == sourceTableName)
+                {
+                    MessageBox.Show("New table name cannot be the same as the source table.", "Invalid Name", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                // Check if table already exists
+                var existingTables = databaseManager.GetTableNames();
+                if (existingTables.Contains(newTableName))
+                {
+                    var result = MessageBox.Show($"A table named '{newTableName}' already exists. Do you want to replace it?",
+                        "Table Exists", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+                    if (result == DialogResult.Yes)
+                    {
+                        // Drop existing table
+                        if (!databaseManager.ExecuteNonQuery($"DROP TABLE IF EXISTS {newTableName}", out string dropError))
+                        {
+                            MessageBox.Show($"Error dropping existing table:\n\n{dropError}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            return;
+                        }
+                    }
+                    else
+                    {
+                        return;
+                    }
+                }
+
+                // Copy the table structure
+                if (databaseManager.CopyTableStructure(sourceTableName, newTableName, out string errorMessage))
+                {
+                    LoadDatabaseStructure();
+                    MessageBox.Show($"Table '{sourceTableName}' structure copied successfully to '{newTableName}'.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else
+                {
+                    MessageBox.Show($"Error copying table:\n\n{errorMessage}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error copying table:\n\n{ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void cloneTableToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (databaseTreeView.SelectedNode == null)
+                return;
+
+            string tag = databaseTreeView.SelectedNode.Tag?.ToString() ?? "";
+            if (!tag.StartsWith("table:"))
+                return;
+
+            string sourceTableName = tag.Substring(6); // Remove "table:" prefix
+
+            try
+            {
+                // Prompt user for new table name
+                string newTableName = Microsoft.VisualBasic.Interaction.InputBox(
+                    $"Enter the name for the clone of table '{sourceTableName}':\n\n(This will copy both structure and data)",
+                    "Clone Table",
+                    $"{sourceTableName}_clone"
+                );
+
+                // Check if user cancelled
+                if (string.IsNullOrWhiteSpace(newTableName))
+                {
+                    return;
+                }
+
+                // Validate table name
+                if (newTableName == sourceTableName)
+                {
+                    MessageBox.Show("New table name cannot be the same as the source table.", "Invalid Name", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                // Check if table already exists
+                var existingTables = databaseManager.GetTableNames();
+                if (existingTables.Contains(newTableName))
+                {
+                    var result = MessageBox.Show($"A table named '{newTableName}' already exists. Do you want to replace it?",
+                        "Table Exists", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+                    if (result == DialogResult.Yes)
+                    {
+                        // Drop existing table
+                        if (!databaseManager.ExecuteNonQuery($"DROP TABLE IF EXISTS {newTableName}", out string dropError))
+                        {
+                            MessageBox.Show($"Error dropping existing table:\n\n{dropError}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            return;
+                        }
+                    }
+                    else
+                    {
+                        return;
+                    }
+                }
+
+                // Clone the table (structure + data)
+                if (databaseManager.CloneTable(sourceTableName, newTableName, out string errorMessage))
+                {
+                    LoadDatabaseStructure();
+                    MessageBox.Show($"Table '{sourceTableName}' cloned successfully to '{newTableName}' with all data.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else
+                {
+                    MessageBox.Show($"Error cloning table:\n\n{errorMessage}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error cloning table:\n\n{ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -980,6 +1293,221 @@ namespace SqliteHelper48
             }
         }
 
+        private void createClaudeDocumentationToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (databaseManager.DatabasePath == null)
+            {
+                MessageBox.Show("No database is currently open.", "No Database", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            using (SaveFileDialog saveDialog = new SaveFileDialog())
+            {
+                saveDialog.Filter = "Markdown Files (*.md)|*.md|All Files (*.*)|*.*";
+                saveDialog.DefaultExt = "md";
+                saveDialog.FileName = $"{Path.GetFileNameWithoutExtension(databaseManager.DatabasePath)}_DATABASE.md";
+                saveDialog.Title = "Save Database Documentation";
+
+                if (saveDialog.ShowDialog() == DialogResult.OK)
+                {
+                    try
+                    {
+                        string documentation = GenerateDatabaseDocumentation();
+                        File.WriteAllText(saveDialog.FileName, documentation);
+                        MessageBox.Show($"Database documentation created successfully!\n\nLocation: {saveDialog.FileName}",
+                            "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Error creating documentation:\n\n{ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
+        }
+
+        private string GenerateDatabaseDocumentation()
+        {
+            var sb = new System.Text.StringBuilder();
+            string dbName = Path.GetFileNameWithoutExtension(databaseManager.DatabasePath ?? "Database");
+
+            // Header
+            sb.AppendLine($"# {dbName} - Database Documentation");
+            sb.AppendLine();
+            sb.AppendLine("This documentation was automatically generated for use with Claude AI assistant.");
+            sb.AppendLine();
+            sb.AppendLine($"**Database File:** {databaseManager.DatabasePath}");
+            sb.AppendLine($"**Generated:** {DateTime.Now:yyyy-MM-dd HH:mm:ss}");
+            sb.AppendLine();
+
+            // Overview
+            var tables = databaseManager.GetTableNames();
+            var views = databaseManager.GetViewNames();
+            var indexes = databaseManager.GetIndexNames();
+
+            sb.AppendLine("## Database Overview");
+            sb.AppendLine();
+            sb.AppendLine($"- **Tables:** {tables.Count}");
+            sb.AppendLine($"- **Views:** {views.Count}");
+            sb.AppendLine($"- **Indexes:** {indexes.Count}");
+            sb.AppendLine();
+
+            // Tables Section
+            if (tables.Count > 0)
+            {
+                sb.AppendLine("## Tables");
+                sb.AppendLine();
+
+                foreach (var tableName in tables)
+                {
+                    sb.AppendLine($"### Table: `{tableName}`");
+                    sb.AppendLine();
+
+                    // Get column information
+                    var columns = databaseManager.GetTableColumnInfo(tableName);
+
+                    // Get row count
+                    try
+                    {
+                        var countTable = databaseManager.GetTableData($"(SELECT COUNT(*) as count FROM {tableName})");
+                        if (countTable != null && countTable.Rows.Count > 0)
+                        {
+                            sb.AppendLine($"**Row Count:** {countTable.Rows[0]["count"]}");
+                            sb.AppendLine();
+                        }
+                    }
+                    catch
+                    {
+                        // Ignore count errors
+                    }
+
+                    // Column details
+                    sb.AppendLine("**Columns:**");
+                    sb.AppendLine();
+                    sb.AppendLine("| Column Name | Data Type | Constraints | Default Value |");
+                    sb.AppendLine("|-------------|-----------|-------------|---------------|");
+
+                    foreach (var col in columns)
+                    {
+                        var constraints = new List<string>();
+                        if (col.IsPrimaryKey) constraints.Add("PRIMARY KEY");
+                        if (col.IsAutoIncrement) constraints.Add("AUTOINCREMENT");
+                        if (col.IsNotNull) constraints.Add("NOT NULL");
+
+                        string constraintsStr = constraints.Count > 0 ? string.Join(", ", constraints) : "-";
+                        string defaultVal = string.IsNullOrEmpty(col.DefaultValue) ? "-" : col.DefaultValue;
+                        string dataType = col.DataType == typeof(long) ? "INTEGER" :
+                                         col.DataType == typeof(double) ? "REAL" :
+                                         col.DataType == typeof(byte[]) ? "BLOB" :
+                                         col.DataType == typeof(bool) ? "INTEGER (BOOL)" : "TEXT";
+
+                        sb.AppendLine($"| `{col.Name}` | {dataType} | {constraintsStr} | {defaultVal} |");
+                    }
+
+                    sb.AppendLine();
+
+                    // Get indexes for this table
+                    var tableIndexes = databaseManager.GetTableIndexes(tableName);
+                    if (tableIndexes.Count > 0)
+                    {
+                        sb.AppendLine("**Indexes:**");
+                        sb.AppendLine();
+                        foreach (var indexSql in tableIndexes)
+                        {
+                            sb.AppendLine($"```sql");
+                            sb.AppendLine(indexSql);
+                            sb.AppendLine("```");
+                            sb.AppendLine();
+                        }
+                    }
+
+                    // Get CREATE TABLE SQL
+                    string createSql = databaseManager.GetTableSql(tableName);
+                    if (!string.IsNullOrEmpty(createSql))
+                    {
+                        sb.AppendLine("**Schema Definition:**");
+                        sb.AppendLine();
+                        sb.AppendLine("```sql");
+                        sb.AppendLine(createSql);
+                        sb.AppendLine("```");
+                        sb.AppendLine();
+                    }
+
+                    sb.AppendLine("---");
+                    sb.AppendLine();
+                }
+            }
+
+            // Views Section
+            if (views.Count > 0)
+            {
+                sb.AppendLine("## Views");
+                sb.AppendLine();
+
+                foreach (var viewName in views)
+                {
+                    sb.AppendLine($"### View: `{viewName}`");
+                    sb.AppendLine();
+
+                    string viewSql = databaseManager.GetViewSql(viewName);
+                    if (!string.IsNullOrEmpty(viewSql))
+                    {
+                        sb.AppendLine("**Definition:**");
+                        sb.AppendLine();
+                        sb.AppendLine("```sql");
+                        sb.AppendLine(viewSql);
+                        sb.AppendLine("```");
+                        sb.AppendLine();
+                    }
+
+                    sb.AppendLine("---");
+                    sb.AppendLine();
+                }
+            }
+
+            // Indexes Section
+            if (indexes.Count > 0)
+            {
+                sb.AppendLine("## All Indexes");
+                sb.AppendLine();
+                sb.AppendLine("| Index Name | Definition |");
+                sb.AppendLine("|------------|------------|");
+
+                foreach (var indexName in indexes)
+                {
+                    string indexSql = databaseManager.GetIndexSchema(indexName);
+                    // Extract just the SQL if it contains the header
+                    if (indexSql.Contains("---"))
+                    {
+                        var lines = indexSql.Split('\n');
+                        indexSql = lines.Length > 2 ? lines[2].Trim() : indexSql;
+                    }
+                    sb.AppendLine($"| `{indexName}` | `{indexSql.Replace("\n", " ").Trim()}` |");
+                }
+
+                sb.AppendLine();
+            }
+
+            // Usage Notes
+            sb.AppendLine("## Usage Notes for Claude");
+            sb.AppendLine();
+            sb.AppendLine("This database documentation provides:");
+            sb.AppendLine("- Complete schema information for all tables");
+            sb.AppendLine("- Column definitions with data types and constraints");
+            sb.AppendLine("- Primary keys and indexes");
+            sb.AppendLine("- View definitions");
+            sb.AppendLine("- Row counts for each table");
+            sb.AppendLine();
+            sb.AppendLine("Use this information to:");
+            sb.AppendLine("- Understand the database structure");
+            sb.AppendLine("- Generate accurate SQL queries");
+            sb.AppendLine("- Suggest schema modifications");
+            sb.AppendLine("- Identify relationships between tables");
+            sb.AppendLine("- Optimize queries based on indexes");
+            sb.AppendLine();
+
+            return sb.ToString();
+        }
+
         private void deleteViewToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (databaseTreeView.SelectedNode == null)
@@ -1020,6 +1548,43 @@ namespace SqliteHelper48
                     MessageBox.Show($"Error deleting view:\n\n{ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
+        }
+
+        private TableDefinition ConvertToTableDefinition(string tableName, List<TableColumnInfo> columnInfos)
+        {
+            var tableDefinition = new TableDefinition
+            {
+                Name = tableName,
+                Columns = new List<ColumnDefinition>()
+            };
+
+            foreach (var columnInfo in columnInfos)
+            {
+                // Map .NET type back to SQLite type
+                string sqliteType = "TEXT";
+                if (columnInfo.DataType == typeof(long) || columnInfo.DataType == typeof(int))
+                    sqliteType = "INTEGER";
+                else if (columnInfo.DataType == typeof(double) || columnInfo.DataType == typeof(float))
+                    sqliteType = "REAL";
+                else if (columnInfo.DataType == typeof(byte[]))
+                    sqliteType = "BLOB";
+                else if (columnInfo.DataType == typeof(bool))
+                    sqliteType = "INTEGER";
+
+                var columnDef = new ColumnDefinition
+                {
+                    Name = columnInfo.Name,
+                    DataType = sqliteType,
+                    IsPrimaryKey = columnInfo.IsPrimaryKey,
+                    IsNotNull = columnInfo.IsNotNull,
+                    IsAutoIncrement = columnInfo.IsAutoIncrement,
+                    DefaultValue = columnInfo.DefaultValue
+                };
+
+                tableDefinition.Columns.Add(columnDef);
+            }
+
+            return tableDefinition;
         }
 
         protected override void OnFormClosing(FormClosingEventArgs e)

@@ -53,11 +53,15 @@ namespace SqliteHelper48
             this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
             this.closeDatabaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveCopyOfDatabaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.createClaudeDocumentationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.themeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tablesContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.createTableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tableContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.editTableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.copyTableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.cloneTableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.deleteTableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.deleteViewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -105,7 +109,7 @@ namespace SqliteHelper48
             this.menuStrip.Location = new System.Drawing.Point(0, 0);
             this.menuStrip.Name = "menuStrip";
             this.menuStrip.Padding = new System.Windows.Forms.Padding(5, 2, 0, 2);
-            this.menuStrip.Size = new System.Drawing.Size(686, 24);
+            this.menuStrip.Size = new System.Drawing.Size(1019, 24);
             this.menuStrip.TabIndex = 0;
             this.menuStrip.Text = "menuStrip1";
             // 
@@ -186,7 +190,8 @@ namespace SqliteHelper48
             this.reloadDatabaseToolStripMenuItem,
             this.toolStripSeparator6,
             this.closeDatabaseToolStripMenuItem,
-            this.saveCopyOfDatabaseToolStripMenuItem});
+            this.saveCopyOfDatabaseToolStripMenuItem,
+            this.createClaudeDocumentationToolStripMenuItem});
             this.dataBaseToolStripMenuItem.Name = "dataBaseToolStripMenuItem";
             this.dataBaseToolStripMenuItem.Size = new System.Drawing.Size(70, 20);
             this.dataBaseToolStripMenuItem.Text = "&Data Base";
@@ -251,6 +256,14 @@ namespace SqliteHelper48
             this.saveCopyOfDatabaseToolStripMenuItem.Text = "&Save Copy of Current Database...";
             this.saveCopyOfDatabaseToolStripMenuItem.Click += new System.EventHandler(this.saveCopyOfDatabaseToolStripMenuItem_Click);
             // 
+            // createClaudeDocumentationToolStripMenuItem
+            //
+            this.createClaudeDocumentationToolStripMenuItem.Enabled = false;
+            this.createClaudeDocumentationToolStripMenuItem.Name = "createClaudeDocumentationToolStripMenuItem";
+            this.createClaudeDocumentationToolStripMenuItem.Size = new System.Drawing.Size(246, 22);
+            this.createClaudeDocumentationToolStripMenuItem.Text = "Create Claude Documentation";
+            this.createClaudeDocumentationToolStripMenuItem.Click += new System.EventHandler(this.createClaudeDocumentationToolStripMenuItem_Click);
+            //
             // viewToolStripMenuItem
             // 
             this.viewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -262,7 +275,7 @@ namespace SqliteHelper48
             // themeToolStripMenuItem
             // 
             this.themeToolStripMenuItem.Name = "themeToolStripMenuItem";
-            this.themeToolStripMenuItem.Size = new System.Drawing.Size(110, 22);
+            this.themeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.themeToolStripMenuItem.Text = "&Theme";
             // 
             // tablesContextMenu
@@ -282,14 +295,38 @@ namespace SqliteHelper48
             // tableContextMenu
             // 
             this.tableContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.editTableToolStripMenuItem,
+            this.copyTableToolStripMenuItem,
+            this.cloneTableToolStripMenuItem,
             this.deleteTableToolStripMenuItem});
             this.tableContextMenu.Name = "tableContextMenu";
-            this.tableContextMenu.Size = new System.Drawing.Size(138, 26);
+            this.tableContextMenu.Size = new System.Drawing.Size(145, 92);
+            // 
+            // editTableToolStripMenuItem
+            // 
+            this.editTableToolStripMenuItem.Name = "editTableToolStripMenuItem";
+            this.editTableToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
+            this.editTableToolStripMenuItem.Text = "Edit Table...";
+            this.editTableToolStripMenuItem.Click += new System.EventHandler(this.editTableToolStripMenuItem_Click);
+            // 
+            // copyTableToolStripMenuItem
+            // 
+            this.copyTableToolStripMenuItem.Name = "copyTableToolStripMenuItem";
+            this.copyTableToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
+            this.copyTableToolStripMenuItem.Text = "Copy Table...";
+            this.copyTableToolStripMenuItem.Click += new System.EventHandler(this.copyTableToolStripMenuItem_Click);
+            // 
+            // cloneTableToolStripMenuItem
+            // 
+            this.cloneTableToolStripMenuItem.Name = "cloneTableToolStripMenuItem";
+            this.cloneTableToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
+            this.cloneTableToolStripMenuItem.Text = "Clone Table...";
+            this.cloneTableToolStripMenuItem.Click += new System.EventHandler(this.cloneTableToolStripMenuItem_Click);
             // 
             // deleteTableToolStripMenuItem
             // 
             this.deleteTableToolStripMenuItem.Name = "deleteTableToolStripMenuItem";
-            this.deleteTableToolStripMenuItem.Size = new System.Drawing.Size(137, 22);
+            this.deleteTableToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
             this.deleteTableToolStripMenuItem.Text = "Delete Table";
             this.deleteTableToolStripMenuItem.Click += new System.EventHandler(this.deleteTableToolStripMenuItem_Click);
             // 
@@ -313,10 +350,10 @@ namespace SqliteHelper48
             this.toolStripStatusLabel,
             this.projectStatusLabel,
             this.databaseStatusLabel});
-            this.statusStrip.Location = new System.Drawing.Point(0, 366);
+            this.statusStrip.Location = new System.Drawing.Point(0, 636);
             this.statusStrip.Name = "statusStrip";
             this.statusStrip.Padding = new System.Windows.Forms.Padding(1, 0, 12, 0);
-            this.statusStrip.Size = new System.Drawing.Size(686, 24);
+            this.statusStrip.Size = new System.Drawing.Size(1019, 24);
             this.statusStrip.TabIndex = 1;
             this.statusStrip.Text = "statusStrip1";
             // 
@@ -353,8 +390,8 @@ namespace SqliteHelper48
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.dataGridView);
-            this.splitContainer1.Size = new System.Drawing.Size(686, 342);
-            this.splitContainer1.SplitterDistance = 257;
+            this.splitContainer1.Size = new System.Drawing.Size(1019, 612);
+            this.splitContainer1.SplitterDistance = 381;
             this.splitContainer1.SplitterWidth = 3;
             this.splitContainer1.TabIndex = 2;
             // 
@@ -372,8 +409,8 @@ namespace SqliteHelper48
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.Controls.Add(this.objectInfoPanel);
-            this.splitContainer2.Size = new System.Drawing.Size(257, 342);
-            this.splitContainer2.SplitterDistance = 211;
+            this.splitContainer2.Size = new System.Drawing.Size(381, 612);
+            this.splitContainer2.SplitterDistance = 377;
             this.splitContainer2.SplitterWidth = 3;
             this.splitContainer2.TabIndex = 0;
             // 
@@ -386,7 +423,7 @@ namespace SqliteHelper48
             this.databaseTreeView.Location = new System.Drawing.Point(0, 0);
             this.databaseTreeView.Name = "databaseTreeView";
             this.databaseTreeView.SelectedImageIndex = 0;
-            this.databaseTreeView.Size = new System.Drawing.Size(257, 211);
+            this.databaseTreeView.Size = new System.Drawing.Size(381, 377);
             this.databaseTreeView.TabIndex = 0;
             this.databaseTreeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.databaseTreeView_AfterSelect);
             // 
@@ -403,7 +440,7 @@ namespace SqliteHelper48
             this.objectInfoPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.objectInfoPanel.Location = new System.Drawing.Point(0, 0);
             this.objectInfoPanel.Name = "objectInfoPanel";
-            this.objectInfoPanel.Size = new System.Drawing.Size(257, 128);
+            this.objectInfoPanel.Size = new System.Drawing.Size(381, 232);
             this.objectInfoPanel.TabIndex = 0;
             // 
             // objectInfoTextBox
@@ -414,7 +451,7 @@ namespace SqliteHelper48
             this.objectInfoTextBox.Location = new System.Drawing.Point(0, 17);
             this.objectInfoTextBox.Name = "objectInfoTextBox";
             this.objectInfoTextBox.ReadOnly = true;
-            this.objectInfoTextBox.Size = new System.Drawing.Size(257, 111);
+            this.objectInfoTextBox.Size = new System.Drawing.Size(381, 215);
             this.objectInfoTextBox.TabIndex = 1;
             this.objectInfoTextBox.Text = "";
             // 
@@ -426,7 +463,7 @@ namespace SqliteHelper48
             this.objectInfoLabel.Location = new System.Drawing.Point(0, 0);
             this.objectInfoLabel.Name = "objectInfoLabel";
             this.objectInfoLabel.Padding = new System.Windows.Forms.Padding(4, 3, 0, 0);
-            this.objectInfoLabel.Size = new System.Drawing.Size(257, 17);
+            this.objectInfoLabel.Size = new System.Drawing.Size(381, 17);
             this.objectInfoLabel.TabIndex = 0;
             this.objectInfoLabel.Text = "Object Information";
             // 
@@ -440,7 +477,7 @@ namespace SqliteHelper48
             this.dataGridView.Enabled = false;
             this.dataGridView.Location = new System.Drawing.Point(0, 0);
             this.dataGridView.Name = "dataGridView";
-            this.dataGridView.Size = new System.Drawing.Size(426, 342);
+            this.dataGridView.Size = new System.Drawing.Size(635, 612);
             this.dataGridView.TabIndex = 0;
             // 
             // gridContextMenu
@@ -481,6 +518,10 @@ namespace SqliteHelper48
             this.themeManager1.ExcludedControlTypes.Add("ZidUtilities.CommonCode.ICSharpTextEditor.ExtendedEditor");
             this.themeManager1.ExcludedControlTypes.Add("ICSharpCode.TextEditor.TextEditorControl");
             this.themeManager1.ExcludedControlTypes.Add("ZidUtilities.CommonCode.ICSharpTextEditor.ExtendedEditor");
+            this.themeManager1.ExcludedControlTypes.Add("ICSharpCode.TextEditor.TextEditorControl");
+            this.themeManager1.ExcludedControlTypes.Add("ZidUtilities.CommonCode.ICSharpTextEditor.ExtendedEditor");
+            this.themeManager1.ExcludedControlTypes.Add("ICSharpCode.TextEditor.TextEditorControl");
+            this.themeManager1.ExcludedControlTypes.Add("ZidUtilities.CommonCode.ICSharpTextEditor.ExtendedEditor");
             this.themeManager1.ParentForm = this;
             this.themeManager1.Theme = ZidUtilities.CommonCode.Win.ZidThemes.CodeProject;
             // 
@@ -488,7 +529,7 @@ namespace SqliteHelper48
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(686, 390);
+            this.ClientSize = new System.Drawing.Size(1019, 660);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.statusStrip);
             this.Controls.Add(this.menuStrip);
@@ -549,6 +590,9 @@ namespace SqliteHelper48
         private ContextMenuStrip tablesContextMenu;
         private ToolStripMenuItem createTableToolStripMenuItem;
         private ContextMenuStrip tableContextMenu;
+        private ToolStripMenuItem editTableToolStripMenuItem;
+        private ToolStripMenuItem copyTableToolStripMenuItem;
+        private ToolStripMenuItem cloneTableToolStripMenuItem;
         private ToolStripMenuItem deleteTableToolStripMenuItem;
         private ContextMenuStrip viewContextMenu;
         private ToolStripMenuItem deleteViewToolStripMenuItem;
@@ -569,5 +613,6 @@ namespace SqliteHelper48
         private ToolStripMenuItem editRowToolStripMenuItem;
         private ToolStripMenuItem deleteRowToolStripMenuItem;
         private ZidUtilities.CommonCode.Win.Controls.ThemeManager themeManager1;
+        private ToolStripMenuItem createClaudeDocumentationToolStripMenuItem;
     }
 }
